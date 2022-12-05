@@ -6,7 +6,7 @@ import { Storage } from "enmity/metro/common";
 const setalias: Command = {
     id: "setalias-command",
     name: "setalias",
-    displayName: "setalias",
+    displayName: "setAlias",
     description: "sets one of your aliases in chat",
     displayDescription: "sets one of your aliases in chat",
     type: ApplicationCommandType.Chat,

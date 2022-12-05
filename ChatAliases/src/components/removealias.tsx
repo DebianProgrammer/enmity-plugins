@@ -6,7 +6,7 @@ import { Storage } from "enmity/metro/common";
 const removealias: Command = {
     id: "removealias-command",
     name: "removealias",
-    displayName: "removealias",
+    displayName: "removeAlias",
     description: "removes one of your aliases in chat",
     displayDescription: "removes one of your aliases in chat",
     type: ApplicationCommandType.Chat,
