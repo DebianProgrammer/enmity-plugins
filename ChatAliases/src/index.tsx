@@ -4,7 +4,6 @@ import manifest from '../manifest.json';
 import { alias } from './components/alias';
 import { removealias } from './components/removealias';
 import { setalias } from './components/setalias';
-import Settings from './components/Settings';
 
 
 const ChatAliases: Plugin = {
@@ -16,10 +15,6 @@ const ChatAliases: Plugin = {
 
    onStop() {
       this.commands = [];
-   },
-
-   getSettingsPanel({ settings }) {
-      return <Settings settings={settings} />;
    }
 };
 
