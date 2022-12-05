@@ -5,7 +5,7 @@ import { Storage } from "enmity/metro/common";
 
 const setalias: Command = {
     id: "setalias-command",
-    name: "setalias",
+    name: "setAlias",
     displayName: "setAlias",
     description: "sets one of your aliases in chat",
     displayDescription: "sets one of your aliases in chat",
