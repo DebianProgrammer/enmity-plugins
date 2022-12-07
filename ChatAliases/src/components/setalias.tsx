@@ -1,6 +1,6 @@
 import { sendReply } from "enmity/api/clyde";
 import { Command, ApplicationCommandOptionType, ApplicationCommandType, ApplicationCommandInputType } from "enmity/api/commands";
-import { Storage } from "enmity/metro/common";
+import { get, set } from "enmity/api/settings";
 
 
 const setalias: Command = {
@@ -31,16 +31,12 @@ const setalias: Command = {
         const inputalias = args[args.findIndex(i => i.name === "aliasid")].value;
         const contentalias = args[args.findIndex(i => i.name === "content")].value;
         
-        let aliasesStorage = await Storage.getItem("ChatAliases");
-        if(!aliasesStorage) {
-            await Storage.setItem("ChatAliases", "{}");
-            aliasesStorage = await Storage.getItem("ChatAliases");
-        }
+        let aliasesStorage = get("ChatAliases", "aliases", "{}");
 
-        let aliases = JSON.parse(aliasesStorage);
+        let aliases = JSON.parse(aliasesStorage?.toString() ?? "{}");
         
         aliases[inputalias] = contentalias;
-        await Storage.setItem("ChatAliases", JSON.stringify(aliases));
+        set("ChatAliases", "aliases", JSON.stringify(aliases));
         
         sendReply(message?.channel.id ?? "0", `The alias ${inputalias} has been set to ${contentalias}`);
     }

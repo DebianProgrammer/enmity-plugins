@@ -1,7 +1,7 @@
 import { sendReply } from "enmity/api/clyde";
 import { Command, ApplicationCommandOptionType, ApplicationCommandType, ApplicationCommandInputType } from "enmity/api/commands";
-import { Storage } from "enmity/metro/common";
-
+import { get } from 'enmity/api/settings';
+import { getAllIds } from "../getAllIds";
 
 const alias: Command = {
     id: "alias-command",
@@ -17,20 +17,17 @@ const alias: Command = {
         description: "The ID of the alias to use",
         displayDescription: "The ID of the alias to use",
         type: ApplicationCommandOptionType.String,
+        get choices() {
+            return getAllIds();
+        },
         required: true
     }],
     execute: async function (args, message) {
         const inputalias = args[args.findIndex(i => i.name === "aliasid")].value;
         
-        let aliasesStorage = await Storage.getItem("ChatAliases");
-        if(!aliasesStorage) {
-            await Storage.setItem("ChatAliases", "{}");
-            aliasesStorage = await Storage.getItem("ChatAliases");
-        }
+        let aliasesStorage = get("ChatAliases", "aliases", "{}");
 
-
-        let aliases = JSON.parse(aliasesStorage);
-        
+        let aliases = JSON.parse(aliasesStorage?.toString() ?? "{}");
         if(aliases[inputalias] == undefined) {
             sendReply(message?.channel.id ?? "0", `That's not a valid alias id. Use the /setalias command to add one and /removealias to remove one. Valid aliases are: ${Object.keys(aliases)}`);
             return;

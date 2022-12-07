@@ -1,7 +1,7 @@
 import { sendReply } from "enmity/api/clyde";
 import { Command, ApplicationCommandOptionType, ApplicationCommandType, ApplicationCommandInputType } from "enmity/api/commands";
-import { Storage } from "enmity/metro/common";
-
+import { get, set } from "enmity/api/settings";
+import { getAllIds } from "../getAllIds";
 
 const removealias: Command = {
     id: "removealias-command",
@@ -17,25 +17,24 @@ const removealias: Command = {
         description: "The ID of the alias to remove",
         displayDescription: "The ID of the alias to remove",
         type: ApplicationCommandOptionType.String,
+        get choices() {
+            return getAllIds();
+        },
         required: true
     }],
     execute: async function (args, message) {
         const inputalias = args[args.findIndex(i => i.name === "aliasid")].value;
         
-        let aliasesStorage = await Storage.getItem("ChatAliases");
-        if(!aliasesStorage) {
-            sendReply(message?.channel.id ?? "0", "You don't have any aliases");
-            return;
-        }
+        let aliasesStorage = get("ChatAliases", "aliases", "{}");
 
-        let aliases = JSON.parse(aliasesStorage);
+        let aliases = JSON.parse(aliasesStorage?.toString() ?? "{}");
         if(!aliases[inputalias]) {
             sendReply(message?.channel.id ?? "0", "That alias does not exist");
             return;
         }
         
         delete aliases[inputalias];
-        await Storage.setItem("ChatAliases", JSON.stringify(aliases));
+        set("ChatAliases", "aliases", JSON.stringify(aliases));
         
         sendReply(message?.channel.id ?? "0", `The alias ${inputalias} has been deleted`);
     }
