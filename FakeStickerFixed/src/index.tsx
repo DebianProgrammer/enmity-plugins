@@ -15,7 +15,7 @@ const [
     MessageStore,
     Permissions
 ] = bulk(
-    filters.byProps("isSendableSticker"),
+    filters.byProps("isSendableSticker", "getStickerSendability"),
     filters.byProps("getPremiumPacks", "getAllGuildStickers", "getStickerById"),
     filters.byProps("getChannel"),
     filters.byProps("sendMessage", "sendStickers"),
@@ -81,9 +81,15 @@ const FakeSticker: Plugin = {
         Patcher.instead(PermStat.default, "canUseCustomStickersEverywhere", (_, args, org) => {
             return true
         })
+
+        Patcher.instead(PermStat2, "getStickerSendability", (_, args, org) => {
+            return 0
+        })
+
         Patcher.after(PermStat2, "isSendableSticker", (_, args, org) => {
             return true
         })
+
         Patcher.instead(MessageStore, "sendStickers", (_, args, org) => {
             const channel = ChannelStore.getChannel(args[0])
             const sticker = StickerStore.getStickerById(args[1][0])
