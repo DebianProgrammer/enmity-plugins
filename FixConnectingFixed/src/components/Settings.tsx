@@ -1,14 +1,17 @@
-import {FormRow, FormSection, View, ScrollView, Image, Text} from 'enmity/components'
-import {Constants, Navigation, React, StyleSheet} from 'enmity/metro/common'
-import {Linking} from "enmity/metro/common"
+import { FormRow, FormSection, FormSwitch, View, ScrollView, Image, Text } from 'enmity/components';
+import { Constants, Navigation, React, StyleSheet } from 'enmity/metro/common';
+import { getIDByName } from "enmity/api/assets";
+import { Linking } from "enmity/metro/common";
+import { getByProps } from "enmity/modules";
+
 // @ts-ignore
-import {name, version} from '../../manifest.json'
-import {getIDByName} from "enmity/api/assets"
-import {getByProps} from "enmity/modules"
+import { name, version } from '../../manifest.json';
+
 
 const GitHubIcon = getIDByName('img_account_sync_github_white')
 const DiscordIcon = getIDByName('Discord')
 const TwitterIcon = getIDByName('img_account_sync_twitter_white')
+const ToastInfoIcon = getIDByName('ic_information_filled_24px')
 
 const Invites = getByProps('acceptInviteAndTransitionToInviteChannel')
 
@@ -66,6 +69,21 @@ export default ({settings}) => {
                     <Text style={styles.author}>by mafu</Text>
                 </View>
             </View>
+            <FormSection title="SETTINGS">
+                <FormRow
+                    label="Hide Popup"
+                    subLabel="Hide the popup at the top when the bug is fixed"
+                    leading={<FormRow.Icon source={ToastInfoIcon}/>}
+                    trailing={
+                        <FormSwitch
+                            value={settings.getBoolean("hideToast", false)}
+                            onValueChange={(value) => {
+                                settings.set("hideToast", value)
+                            }}
+                        />
+                    }
+                />
+            </FormSection>
             <FormSection title="INFORMATION">
                 <FormRow
                     label="Follow me on Twitter"
