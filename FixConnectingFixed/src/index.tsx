@@ -1,12 +1,15 @@
-import {Plugin, registerPlugin} from 'enmity/managers/plugins'
-import {React, Toasts} from 'enmity/metro/common'
-import {create} from 'enmity/patcher'
+import { Plugin, registerPlugin } from 'enmity/managers/plugins';
+import { React, Toasts } from 'enmity/metro/common';
+import { getIDByName } from "enmity/api/assets";
+import { getByProps } from "enmity/modules";
+import { getModule } from 'enmity/modules';
+import { get } from "enmity/api/settings";
+import { create } from 'enmity/patcher';
+
 // @ts-ignore
-import manifest, {name as plugin_name} from '../manifest.json'
-import Settings from "./components/Settings"
-import {getByProps} from "enmity/modules";
-import {getIDByName} from "enmity/api/assets";
-import { getModule } from 'enmity/modules'
+import manifest, { name as plugin_name } from '../manifest.json';
+import Settings from "./components/Settings";
+
 
 const Patcher = create('FixConnecting')
 
@@ -25,11 +28,17 @@ const FixConnecting: Plugin = {
                     FluxDispatcher.dispatch({type: 'APP_STATE_UPDATE', state: 'inactive'})
                     FluxDispatcher.dispatch({type: 'APP_STATE_UPDATE', state: 'background'})
                     FluxDispatcher.dispatch({type: 'APP_STATE_UPDATE', state: 'active'})
-                    Toasts.open({
-                        key: "TOAST",
-                        content: `Automatically fixed Connecting bug!`,
-                        icon: getIDByName('Check')
-                    });
+                    
+                    if (get(plugin_name, "hideToast", true)) {
+                        return;
+                    }
+                    else {
+                        Toasts.open({
+                            key: "TOAST",
+                            content: `Automatically fixed Connecting bug!`,
+                            icon: getIDByName('Check')
+                        });
+                    }
                 }
             }, 300)
         })
